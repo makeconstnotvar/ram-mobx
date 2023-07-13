@@ -1,4 +1,4 @@
-import {computed, makeObservable, observable} from "mobx";
+import {computed, makeObservable, observable,action} from "mobx";
 
 class ConditionStore {
   constructor() {
@@ -9,6 +9,11 @@ class ConditionStore {
   @observable isWindow = false;
   @observable isElectric = false;
   @observable isCentral = false;
+
+  @action test(){
+    this.isElectric = true
+    this.isWindow = true;
+  }
 
   @computed get isEnabled() {
     return this.isSwitched && this.isWindow && this.isElectric && this.isCentral

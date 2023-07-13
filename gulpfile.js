@@ -4,6 +4,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const clean = require('gulp-clean-css');
 const sass = require('gulp-sass')(require('sass'));
 const autoprefixer = require('gulp-autoprefixer');
+const rename = require("gulp-rename");
 const inject = require('gulp-inject');
 const del = require('del');
 
@@ -26,6 +27,7 @@ gulp.task('styles', function () {
     .pipe(sass({importer: tildaResolver}).on('error', sass.logError))
     .pipe(autoprefixer())
     .pipe(clean())
+    .pipe(rename("ram.css"))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build/styles'))
 });
@@ -34,7 +36,7 @@ gulp.task('watch', gulp.series('delete', 'styles', function () {
   return gulp.watch(['./src/**/*.scss'], gulp.series('styles'));
 }));
 
-gulp.task('debug', gulp.series('delete', 'styles', 'inject',));
+gulp.task('test', gulp.series('delete', 'styles', 'inject',));
 
 function tildaResolver(url, prev, done) {
   if (url[0] === '~') {

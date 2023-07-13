@@ -1,17 +1,11 @@
-//let webpack = require('webpack');
-let path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const path = require('path');
+const wba = require('webpack-bundle-analyzer');
 
 module.exports = {
   mode: 'development',
   devtool: 'source-map',
   plugins: [
-  /* new HtmlWebpackPlugin({
-     template:'./src/index.html',
-     filename:'./index.html'
-   }),*/
-   // new BundleAnalyzerPlugin(),
+    //new wba.BundleAnalyzerPlugin(),
   ],
   entry: {
     'ram': './src/index.jsx'
@@ -40,10 +34,6 @@ module.exports = {
             }
           }
         ]
-      },
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
       },
     ]
   },

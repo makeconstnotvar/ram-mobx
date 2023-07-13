@@ -6,6 +6,7 @@ const Header = props => {
     <div className='header'>
       <Link to='/'>Главная</Link>
       <Link to='/condition'>Кондиционер</Link>
+      <Link to='/characters'>Персонажи</Link>
     </div>
   )
 }
