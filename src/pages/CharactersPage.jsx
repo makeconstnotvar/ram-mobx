@@ -1,21 +1,22 @@
-import React, {Fragment, useEffect, useRef} from "react";
+import React, {Fragment, useEffect} from "react";
 import {inject, observer} from "mobx-react";
 
-const CharactersPage = inject('$characters')(observer(props => {
-  const {$characters} = props;
+const CharactersPage = inject('$characters', '$episodes')(observer(props => {
+  const {$characters, $episodes} = props;
 
   useEffect(() => {
     $characters.fetch();
   }, [$characters.filter]);
 
-  let renderCounter = useRef(0);
-
   const handler = (field, value) => {
     $characters.setFilter(field, value)
-    //$characters.fetch();
   }
 
-  console.log(++renderCounter.current);
+  const showEpisodes = async (char) => {
+    let epIds = $characters.episodesByChar(char.id);
+    await $episodes.fetch({ids: epIds.join(',')});
+    char.episodes = $episodes.data;
+  }
 
   return (
     <Fragment>
@@ -24,6 +25,12 @@ const CharactersPage = inject('$characters')(observer(props => {
         <button onClick={() => $characters.cleanFilter()}>очистить</button>
         Имя
         <input value={$characters.filter.name} onChange={e => handler('name', e.target.value)}/>
+        <select value={$characters.filter.status} onChange={e => handler('status', e.target.value)}>
+          <option value=''>Все</option>
+          <option value='Dead'>Dead</option>
+          <option value='Alive'>Alive</option>
+          <option value='Unknown'>Unknown</option>
+        </select>
       </div>
       <div>
         {
@@ -37,9 +44,17 @@ const CharactersPage = inject('$characters')(observer(props => {
         {
           !$characters.isError &&
           $characters.data.map(char => (
-            <div key={char.id}>{char.name}</div>
+            <div key={char.id}>
+              <div>{char.name}, {char.status}</div>
+              <img className='char-img' src={char.image}/>
+              <button onClick={() => showEpisodes(char)}>Показать эпизоды</button>
+              {
+                char.episodes.map(ep => ep.name)
+              }
+            </div>
           ))
         }
+
       </div>
     </Fragment>
   )
